@@ -1,7 +1,7 @@
 @startuml
 skinparam dpi 150
 skinparam classAttributeIconSize 0
-hide empty members
+
 
 ' Your task (Chapter 3, Question 2): draw the UML class diagram for the
 ' Vehicle / Car / ElectricCar / Chargeable code.
