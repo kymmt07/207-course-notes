@@ -30,16 +30,86 @@ abstract class Item {
 ' TODO: add boxes for Book and DVD. What differs between them — a whole class,
 '       or just the value of a loan-period field?
 
+ interface Borrowable {
+    + loanPeriodDays(): int
+    + isOnLoan(): boolean
+ }
+
+ class Book {
+    + loanPeriodDays(): int
+    + isOnLoan(): boolean
+ }
+
+ class DVD {
+    + loanPeriodDays(): int
+    + isOnLoan(): boolean
+ }
+
+ class ReferenceItem {
+ }
+
+ class Catalogue {
+    - items: Item[]
+    + add(item: Item)
+    + find(number: String): Item
+ }
+
+Book --|> Item
+DVD --|> Item
+ReferenceItem --|> Item
+
 ' TODO: reference-only items cannot be borrowed at all. Decide how to say that
 '       in the diagram: a subclass, or an interface (e.g. "Borrowable") that
 '       only some items realize?
 
+Book ..|> Borrowable
+DVD ..|> Borrowable
+
 ' TODO: add Member and Librarian. What do they have in common? Add the common
 '       supertype if you think one is warranted.
+
+abstract class User {
+    - id: String
+    - name: String
+    + login(enteredId: String): boolean
+}
+
+class Member {
+    - memberNumber: String
+    + borrow(item: Borrowable, today: Date): Loan
+    + placeHold(item: Borrowable, today: Date): Hold
+}
+
+class Librarian {
+    - employeeId: String
+    + addItem(item: Item)
+    + waiveLateFee(loan: Loan)
+}
 
 ' TODO: add whatever represents a hold, and connect it to the classes that need
 '       to know about it.
 
+class Loan {
+    - dueDate: Date
+    - lateFee: Money
+    - feeWaived: boolean
+    + isOverdue(today: Date): boolean
+    + waiveFee()
+}
+
+class Hold {
+    - placedOn: Date
+}
+
 ' TODO: add the arrows between all of your types.
 
+Member --|> User
+Librarian --|> User
+
+Member o--> "*" Loan
+Member o--> "*" Hold
+Loan o--> Borrowable
+Hold o--> Borrowable
+Librarian o--> Catalogue
+Catalogue o--> "*" Item
 @enduml
